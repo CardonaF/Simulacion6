@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/estilo.css">
+    <title>Actividad de Escritura</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Actividad de escritura precisa</h1>
+        <h3>Para este ejercicio deberás de escribir con exactitud el texto que aparece en pantalla en el menor tiempo posible, teniendo en cuenta los acentos y las puntuaciones.<br><span>Tienes 60 segundos para completar el texto, ¡Buena Suerte!</span></h3>
+        <!-- <p id="texto">El rápido zorro marrón salta sobre el perro perezoso, mientras las hojas del otoño caen lentamente al suelo. ¿Quién pensaría que algo tan simple puede ser tan útil? Practicar cada día mejora la precisión, la velocidad y, sobre todo, la confianza frente al teclado. ¡No olvides mantener la postura correcta y respirar con calma!</p> -->
+        <p id="preguntaT" class="preguntaT"></p>
+        <textarea id="campo" class="campo" placeholder="Escribe aqui" oninput="verificarTexto()"></textarea>
+        
+        <div class="containerR">
+            <p><strong>Tiempo: </strong><span id="tiempo" class="fondo">0</span> segundos</p>
+            <p><strong>Precisión: </strong><span id="precision" class="fondo">100%</span></p>
+         
+
+            <div class="mensaje" id="mensaje"></div>
+        </div>
+
+        <div>
+            <button class="btnR" onclick="reiniciar()">Reiniciar</button>
+            <button class="btnF" onclick="finalizar()">Finalizar</button>
+        </div>
+    </div>
+    <script>
+        const campo= document.getElementById("campo");
+        const tiempoContado= document.getElementById("tiempo");
+        const preci= document.getElementById("precision");
+        const mensaje= document.getElementById("mensaje");
+
+        let preguntas=[
+            {
+                texto: "El rápido zorro marrón salta sobre el perro perezoso, mientras las hojas del otoño caen lentamente al suelo. ¿Quién pensaría que algo tan simple puede ser tan útil? Practicar cada día mejora la precisión, la velocidad y, sobre todo, la confianza frente al teclado. ¡No olvides mantener la postura correcta y respirar con calma!"
+            },
+            {
+                texto: "¡Qué maravilla fue el paseo por el bosque! Los niños recogieron hojas secas y observaron animales pequeños entre los arbustos. La luz del sol se filtraba entre las ramas, creando sombras que bailaban en el suelo."
+            },
+            {
+                texto: "Cada mañana, Clara prepara café mientras escucha el canto de los pájaros. La brisa suave entra por la ventana, moviendo ligeramente las cortinas. Es su momento favorito antes de comenzar el día."
+            }
+        ];
+
+        const i= Math.floor(Math.random()* preguntas.length);
+        const pregunta= preguntas[i];
+        document.getElementById("preguntaT").innerText= pregunta.texto;
+        const texto= document.getElementById("preguntaT").textContent;
+
+        let tiempo= 0;
+        let intervalo;
+        let iniciar= false;
+        let preciFinal=0;
+
+        function verificarTexto(){
+            if(!iniciar){
+                intervalo= setInterval(() =>{
+                    tiempo++; 
+                    tiempoContado.textContent= tiempo;
+                    if(tiempo >= 20 && tiempo < 40){
+                        tiempoContado.style.color="yellow";
+                    }else if(tiempo >= 40 && tiempo < 50 ){
+                        tiempoContado.style.color="orange";
+                    }else if(tiempo >= 50){
+                        tiempoContado.style.color="red";
+                    }
+                    if(tiempo==60){
+                        alert("El tiempo se agoto, lograste completar un "+preciFinal +"% en "+tiempo +" segundos");
+                        campo.disabled= true;
+                        clearInterval(intervalo);
+                    }
+                },1000)
+                iniciar= true;
+            }
+
+            let textoIngresado= campo.value;
+            let cont= 0;
+
+            for(let i=0; i< texto.length; i++){
+                if(textoIngresado[i] === texto[i]){
+                    cont++
+                }    
+            }
+            if(texto.length>0){
+                    preciFinal= Math.round((cont / texto.length) * 100);
+                }else{
+                    preciFinal= 0;
+                }
+                preci.textContent= `${preciFinal}%`;
+        }
+        // if(){
+        //     alert("El tiempo se acabo, este es el resultado");
+        // }
+
+
+        function reiniciar(){
+            clearInterval(intervalo);
+            window.location.reload();
+        }
+        function finalizar(){
+            if(iniciar){
+                alert("Completaste un "+preciFinal +"% en "+tiempo +" segundos");
+                // mensaje.textContent= "Completaste un "+preciFinal +"% en "+tiempo +" segundos";
+                // mensaje.style.backgroundColor= "blue";
+                // alert("El tiempo se agoto, lograste completar un "+preciFinal +"% en "+tiempo +" segundos");
+                // let limite= Math.min(textoIngresado.length, texto.length);
+                campo.disabled= true;
+                clearInterval(intervalo);
+            }
+        }
+
+
+    </script>
+</body>
+</html>  
